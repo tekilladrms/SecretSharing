@@ -5,8 +5,6 @@ using SecretSharing.Application.Abstractions;
 using SecretSharing.Application.DTO;
 using SecretSharing.Domain.Entities;
 using SecretSharing.Domain.Exceptions;
-using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
