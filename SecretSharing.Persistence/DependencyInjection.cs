@@ -13,8 +13,16 @@ namespace SecretSharing.Persistence
         {
             var connectionString = configuration["DbConnection"];
 
-            
-            
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    configuration.GetConnectionString(connectionString)));
+
+            //services.AddDbContext<IdentityDbContext>(options =>
+            //    options.UseSqlServer(
+            //        configuration.GetConnectionString(connectionString)));
+
+            //services.AddIdentityCore<ApplicationUser>();
 
             return services;
         }
