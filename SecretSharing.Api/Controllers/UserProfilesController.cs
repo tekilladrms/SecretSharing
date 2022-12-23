@@ -1,23 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSharing.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[users]")]
     [ApiController]
     public class UserProfilesController : ControllerBase
     {
-        // GET: api/<UserProfilesController>
+        // GET: api/users
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<UserProfilesController>/5
+        // GET api/users/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string Get(Guid id)
         {
             return "value";
         }
