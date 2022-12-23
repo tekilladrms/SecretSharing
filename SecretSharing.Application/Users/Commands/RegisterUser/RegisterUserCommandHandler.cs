@@ -21,31 +21,31 @@ namespace SecretSharing.Application.Users.Commands.RegisterUser
         private readonly IMapper _mapper;
 
         public RegisterUserCommandHandler(
-            //UserManager<ApplicationUser> userManger, 
-            //SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManger, 
+            SignInManager<ApplicationUser> signInManager,
             IMediator mediator, 
             IMapper mapper
             )
         {
-            //_userManager = userManger;
-            //_signInManager = signInManager;
+            _userManager = userManger;
+            _signInManager = signInManager;
             _mediator = mediator;
             _mapper = mapper;
         }
 
         public async Task<UserProfileDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            //var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
 
-            //if (user is not null)
-            //{
-            //    throw new RestException($"User {request.Email} already exsist");
-            //}
+            if (user is not null)
+            {
+                throw new RestException($"User {request.Email} already exsist");
+            }
 
-            //user.Email = request.Email;
-            //user.UserProfile = await _mediator.Send(new CreateUserProfileCommand());
+            user.Email = request.Email;
+            user.UserProfile = await _mediator.Send(new CreateUserProfileCommand());
 
-            //await _userManager.CreateAsync(user, request.Password);
+            await _userManager.CreateAsync(user, request.Password);
 
             return _mapper.Map<UserProfileDto>(UserProfile.Create());
         }
