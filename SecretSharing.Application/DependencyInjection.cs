@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
+using Microsoft.AspNetCore.Hosting;
 
 namespace SecretSharing.Application
 {
@@ -15,9 +16,10 @@ namespace SecretSharing.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            //services.AddMediatR(new[] { Assembly.GetExecutingAssembly() });
+            //services.AddMediatR(Assembly.GetExecutingAssembly());
             //services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() });
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(new[] { Assembly.GetExecutingAssembly() });
             
             return services;
         }
