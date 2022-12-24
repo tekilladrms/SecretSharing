@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Application.Documents.Commands.CreateDocument
 {
-    public sealed record CreateDocumentCommand(DocumentDto DocumentDto) : IRequest<DocumentDto>;
+    public sealed record CreateDocumentCommand(DocumentDto DocumentDto, Guid UserProfileId) : IRequest<DocumentDto>;
     
 }

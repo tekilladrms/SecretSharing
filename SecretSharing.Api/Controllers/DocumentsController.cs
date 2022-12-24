@@ -30,11 +30,11 @@ namespace SecretSharing.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync(Guid userId)
         {
-            var results = await _mediator.Send(new GetDocumentsByUserIdQuery(userId));
+            //var results = await _mediator.Send(new GetDocumentsByUserIdQuery(userId));
 
-            if (results is null || !results.Any()) return BadRequest();
+            //if (results is null || !results.Any()) return BadRequest();
 
-            return Ok(results);
+            //return Ok(results);
         }
 
         // GET api/documents/5
@@ -50,9 +50,9 @@ namespace SecretSharing.Api.Controllers
 
         // POST api/documents
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] DocumentDto documentDto)
+        public async Task<IActionResult> Post([FromBody] DocumentDto documentDto, Guid UserPrifileId)
         {
-            var document = await _mediator.Send(new CreateDocumentCommand(documentDto));
+            var document = await _mediator.Send(new CreateDocumentCommand(documentDto, UserPrifileId));
 
             if(document is null) return BadRequest();
 
@@ -72,7 +72,7 @@ namespace SecretSharing.Api.Controllers
 
         // DELETE api/documents/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid documentId)
+        public async Task<IActionResult> Delete(Guid documentId, Guid)
         {
             return Ok(await _mediator.Send(new DeleteDocumentCommand(documentId)));
         }

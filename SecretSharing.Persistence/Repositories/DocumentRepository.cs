@@ -1,11 +1,14 @@
 ﻿using SecretSharing.Domain.Entities;
 using SecretSharing.Domain.Repositories;
 using System;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SecretSharing.Persistence.Exceptions;
 
 namespace SecretSharing.Persistence.Repositories
 {
@@ -23,31 +26,41 @@ namespace SecretSharing.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Document> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Document> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var document = await _context.Set<Document>().FirstOrDefaultAsync(doc => doc.Guid == id);
+
+            if (document is null) throw new NotFoundPersistencseException($"Document with id = {id} was not found");
+
+            return document;
         }
 
-        public Task<Document> AddAsync(Document entity, CancellationToken cancellationToken = default)
+        public async Task<Document> AddAsync(Document entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await _context.Set<Document>().AddAsync(entity);
+            return await GetByIdAsync(entity.Guid);
         }
 
         public Document Update(Document entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _context.Set<Document>().Update(entity);
+
+            return _context.Set<Document>().FirstOrDefault(doc => doc.Guid == entity.Guid);
         }
 
         public void Delete(Guid id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _context.Set<Document>().Remove(_context.Set<Document>().FirstOrDefault(doc => doc.Guid == id));
         }
 
         public void Delete(Document entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _context.Set<Document>().Remove(entity);
         }
 
-        
+        Document IRepository<Document>.Update(Document entity, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

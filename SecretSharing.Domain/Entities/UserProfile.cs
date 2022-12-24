@@ -47,14 +47,14 @@ namespace SecretSharing.Domain.Entities
             LastName = Name.Create(lastName);
         }
 
-        public void AddDocumentToDocumentList(Document document)
+        public void AddDocumentToDocuments(Document document)
         {
             if(document is null) throw new ArgumentNullDomainException(nameof(document));
 
             _documents.Add(document);
         }
 
-        public void RemoveDocumentFromDocumentList(Document document)
+        public void RemoveDocumentFromDocuments(Document document)
         {
             if(document is null) throw new ArgumentNullDomainException(nameof(document));
 

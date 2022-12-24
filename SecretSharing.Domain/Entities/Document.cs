@@ -30,5 +30,15 @@ namespace SecretSharing.Domain.Entities
         {
             return new Document(DocumentName.Create(name), creator);
         }
+
+        public void AddUserToUsers(UserProfile user)
+        {
+            _users.Add(user);
+
+        }
+        public void DeleteUserFromUsers(UserProfile user)
+        {
+            _users.Remove(user);
+        }
     }
 }
