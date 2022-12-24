@@ -61,11 +61,7 @@ namespace SecretSharing.Domain.Entities
             _documents.Remove(document);
         }
 
-        public void AddUserToWatchDocument(UserProfile userProfile, Document document)
-        {
-            var doc = _documents.FirstOrDefault(doc => doc.Guid == document.Guid);
-            
-        }
+        
 
     }
 }

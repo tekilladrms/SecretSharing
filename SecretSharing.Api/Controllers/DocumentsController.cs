@@ -1,44 +1,80 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SecretSharing.Application.Documents.Commands.CreateDocument;
+using SecretSharing.Application.Documents.Commands.DeleteDocument;
+using SecretSharing.Application.Documents.Commands.UpdateDocument;
+using SecretSharing.Application.Documents.Queries.GetDocumentById;
+using SecretSharing.Application.Documents.Queries.GetDocumentsByUser;
+using SecretSharing.Application.DTO;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSharing.Api.Controllers
 {
-    [Route("api/[documents]")]
+    [Route("api/documents")]
     [ApiController]
     public class DocumentsController : ControllerBase
     {
-        // GET: api/<DocumentsController>
+        private readonly IMediator _mediator;
+
+        public DocumentsController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        // GET: api/documents
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> GetAllAsync(Guid userId)
         {
-            return new string[] { "value1", "value2" };
+            var results = await _mediator.Send(new GetDocumentsByUserIdQuery(userId));
+
+            if (results is null || !results.Any()) return BadRequest();
+
+            return Ok(results);
         }
 
-        // GET api/<DocumentsController>/5
+        // GET api/documents/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(Guid documentId)
         {
-            return "value";
+            var document = await _mediator.Send(new GetDocumentByIdQuery(documentId));
+
+            if(document is null) return BadRequest();
+
+            return Ok(document);
         }
 
-        // POST api/<DocumentsController>
+        // POST api/documents
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] DocumentDto documentDto)
         {
+            var document = await _mediator.Send(new CreateDocumentCommand(documentDto));
+
+            if(document is null) return BadRequest();
+
+            return Created($"api/documents/{document.Name}", document);
         }
 
-        // PUT api/<DocumentsController>/5
+        // PUT api/documents/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put([FromBody] DocumentDto documentDto)
         {
+            var document = await _mediator.Send(new UpdateDocumentCommand(documentDto));
+
+            if(document is null) return BadRequest(); 
+
+            return Ok(document);
         }
 
-        // DELETE api/<DocumentsController>/5
+        // DELETE api/documents/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(Guid documentId)
         {
+            return Ok(await _mediator.Send(new DeleteDocumentCommand(documentId)));
         }
     }
 }

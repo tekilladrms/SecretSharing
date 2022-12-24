@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Application.Documents.Queries.GetDocumentsByUser
 {
-    internal class GetDocumentsByUserQueryHandler
+    internal class GetDocumentsByUserIdQueryvalidator
     {
     }
 }

@@ -9,24 +9,26 @@ namespace SecretSharing.Domain.Entities
     {
         public DocumentName Name { get; private set; }
 
-        public Guid CreatorId { get; private set; }
+        public UserProfile Creator { get; private set; }
 
-        public virtual IReadOnlyCollection<UserProfile> Users { get; private set; }
+        private List<UserProfile> _users;
+        public virtual IReadOnlyCollection<UserProfile> Users => _users ??= new List<UserProfile>();
 
 
         // For EF
         private Document() : base() { }
 
-        private Document(DocumentName name, Guid creatorId)
+        private Document(DocumentName name, UserProfile creator)
         {
             Name = name;
-            CreatorId = creatorId;
-            Users = new List<UserProfile>();
+            Creator = creator;
+            
+            _users.Add(Creator);
         }
 
-        public static Document Create(string name, Guid creatorId)
+        public static Document Create(string name, UserProfile creator)
         {
-            return new Document(DocumentName.Create(name), creatorId);
+            return new Document(DocumentName.Create(name), creator);
         }
     }
 }
