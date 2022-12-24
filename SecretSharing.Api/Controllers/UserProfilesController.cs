@@ -1,45 +1,74 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SecretSharing.Application.DTO;
+using SecretSharing.Application.UserProfiles.Commands.CreateUserProfile;
+using SecretSharing.Application.UserProfiles.Commands.DeleteUserProfile;
+using SecretSharing.Application.UserProfiles.Commands.UpdateUserProfile;
+using SecretSharing.Application.UserProfiles.Queries.GetUserProfileById;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSharing.Api.Controllers
 {
-    [Route("api/[users]")]
+    [Route("api/users")]
     [ApiController]
     public class UserProfilesController : ControllerBase
     {
-        // GET: api/users
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IMediator _mediator;
+
+        public UserProfilesController(IMediator mediator)
         {
-            return new string[] { "value1", "value2" };
+            _mediator = mediator;
         }
+
+        // GET: api/users
+        //[HttpGet]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
 
         // GET api/users/5
         [HttpGet("{id}")]
-        public string Get(Guid id)
+        public async Task<IActionResult> Get(Guid userId)
         {
-            return "value";
+            var user = await _mediator.Send(new GetUserProfileByIdQuery(userId));
+
+            if (user is null) return BadRequest();
+
+            return Ok(user);
         }
 
-        // POST api/<UserProfilesController>
+        // POST api/users
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post()
         {
+            var user = await _mediator.Send(new CreateUserProfileCommand());
+
+            if (user is null) return BadRequest();
+
+            return Created($"api/users/{user.Id}", user);
         }
 
-        // PUT api/<UserProfilesController>/5
+        // PUT api/users/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put([FromBody] UserProfileDto userProfileDto)
         {
+            var user = await _mediator.Send(new UpdateUserProfileCommand(userProfileDto));
+
+            if (user is null) return BadRequest();
+
+            return Ok(user);
         }
 
-        // DELETE api/<UserProfilesController>/5
+        // DELETE api/users/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(Guid userProfileId)
         {
+            return Ok(await _mediator.Send(new DeleteUserProfileCommand(userProfileId)));
         }
     }
 }

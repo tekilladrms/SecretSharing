@@ -18,11 +18,15 @@ namespace SecretSharing.Persistence
                 options.UseSqlServer(
                     configuration.GetConnectionString(connectionString)));
 
-            //services.AddDbContext<IdentityDbContext>(options =>
-            //    options.UseSqlServer(
-            //        configuration.GetConnectionString(connectionString)));
+            services.AddDbContext<IdentityAppDbContext>(options =>
+                options.UseSqlServer(
+                    configuration.GetConnectionString(connectionString)));
 
-            //services.AddIdentityCore<ApplicationUser>();
+            //var builder = services.AddIdentityCore<ApplicationUser>();
+            //var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
+
+            //identityBuilder.AddEntityFrameworkStores<IdentityAppDbContext>();
+            //identityBuilder.AddSignInManager<SignInManager<ApplicationUser>>();
 
             return services;
         }

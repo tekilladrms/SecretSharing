@@ -10,5 +10,5 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Application.UserProfiles.Commands.CreateUserProfile
 {
-    internal sealed record CreateUserProfileCommand() : IRequest<UserProfile>;
+    public sealed record CreateUserProfileCommand() : IRequest<UserProfileDto>;
 }

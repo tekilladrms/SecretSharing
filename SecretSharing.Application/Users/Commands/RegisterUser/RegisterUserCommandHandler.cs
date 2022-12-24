@@ -43,7 +43,7 @@ namespace SecretSharing.Application.Users.Commands.RegisterUser
             }
 
             user.Email = request.Email;
-            user.UserProfile = await _mediator.Send(new CreateUserProfileCommand());
+            user.UserProfile = _mapper.Map<UserProfile>(await _mediator.Send(new CreateUserProfileCommand()));
 
             await _userManager.CreateAsync(user, request.Password);
 

@@ -12,23 +12,25 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Application.UserProfiles.Commands.CreateUserProfile
 {
-    internal class CreateUserProfileCommandHandler : IRequestHandler<CreateUserProfileCommand, UserProfile>
+    internal class CreateUserProfileCommandHandler : IRequestHandler<CreateUserProfileCommand, UserProfileDto>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public CreateUserProfileCommandHandler(IUnitOfWork unitOfWork)
+        public CreateUserProfileCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<UserProfile> Handle(CreateUserProfileCommand request, CancellationToken cancellationToken)
+        public async Task<UserProfileDto> Handle(CreateUserProfileCommand request, CancellationToken cancellationToken)
         {
             var userProfile = UserProfile.Create();
             var result = await _unitOfWork.UserProfiles.AddAsync(userProfile);
 
             await _unitOfWork.SaveChangesAsync();
 
-            return result;
+            return _mapper.Map<UserProfileDto>(result);
         }
 
     }

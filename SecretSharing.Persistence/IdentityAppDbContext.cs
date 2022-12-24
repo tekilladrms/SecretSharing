@@ -4,9 +4,9 @@ using SecretSharing.Application.Users;
 
 namespace SecretSharing.Persistence
 {
-    public class IdentityDbContext : IdentityDbContext<ApplicationUser>
+    public class IdentityAppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public IdentityDbContext(DbContextOptions<IdentityDbContext> options)
+        public IdentityAppDbContext(DbContextOptions<IdentityAppDbContext> options)
             : base(options)
         {
         }
