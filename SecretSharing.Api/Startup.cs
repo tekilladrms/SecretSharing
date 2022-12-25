@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SecretSharing.Application;
+using SecretSharing.Application.Users;
+using SecretSharing.Domain.Repositories;
 using SecretSharing.Persistence;
 
 namespace SecretSharing.Api
@@ -23,7 +27,7 @@ namespace SecretSharing.Api
         {
             services.AddApplication();
             services.AddPersistence(Configuration);
-            
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

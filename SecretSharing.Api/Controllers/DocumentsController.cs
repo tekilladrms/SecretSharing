@@ -4,7 +4,6 @@ using SecretSharing.Application.Documents.Commands.CreateDocument;
 using SecretSharing.Application.Documents.Commands.DeleteDocument;
 using SecretSharing.Application.Documents.Commands.UpdateDocument;
 using SecretSharing.Application.Documents.Queries.GetDocumentById;
-using SecretSharing.Application.Documents.Queries.GetDocumentsByUser;
 using SecretSharing.Application.DTO;
 using System;
 using System.Collections.Generic;
@@ -34,7 +33,7 @@ namespace SecretSharing.Api.Controllers
 
             //if (results is null || !results.Any()) return BadRequest();
 
-            //return Ok(results);
+            return Ok();
         }
 
         // GET api/documents/5
@@ -72,7 +71,7 @@ namespace SecretSharing.Api.Controllers
 
         // DELETE api/documents/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid documentId, Guid)
+        public async Task<IActionResult> Delete(Guid documentId, Guid userId)
         {
             return Ok(await _mediator.Send(new DeleteDocumentCommand(documentId)));
         }

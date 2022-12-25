@@ -31,10 +31,7 @@ namespace SecretSharing.Application.UserProfiles.Queries.GetUserProfileById
                 @"SELECT * FROM UserProfiles WHERE Id = @UserProfileId",
                 new { request.UserProfileId });
 
-            if (userProfile is null)
-            {
-                return await _mediator.Send(new CreateUserProfileCommand());
-            }
+            
 
             return _mapper.Map<UserProfileDto>(userProfile);
 

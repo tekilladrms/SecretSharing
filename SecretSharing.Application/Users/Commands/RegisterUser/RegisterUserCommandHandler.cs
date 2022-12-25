@@ -14,9 +14,8 @@ namespace SecretSharing.Application.Users.Commands.RegisterUser
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, UserProfileDto>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-
         private readonly SignInManager<ApplicationUser> _signInManager;
-
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -24,13 +23,15 @@ namespace SecretSharing.Application.Users.Commands.RegisterUser
             UserManager<ApplicationUser> userManger, 
             SignInManager<ApplicationUser> signInManager,
             IMediator mediator, 
-            IMapper mapper
+            IMapper mapper,
+            IUnitOfWork unitOfWork
             )
         {
             _userManager = userManger;
             _signInManager = signInManager;
             _mediator = mediator;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<UserProfileDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -43,11 +44,18 @@ namespace SecretSharing.Application.Users.Commands.RegisterUser
             }
 
             user.Email = request.Email;
-            user.UserProfile = _mapper.Map<UserProfile>(await _mediator.Send(new CreateUserProfileCommand()));
+            var userProfile = UserProfile.Create();
 
-            await _userManager.CreateAsync(user, request.Password);
+            await _unitOfWork.UserProfiles.AddAsync(userProfile);
+            await _unitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<UserProfileDto>(UserProfile.Create());
+            
+            user.UserProfileId = userProfile.Guid;
+
+            var result = await _userManager.CreateAsync(user, request.Password);
+            
+            
+            return _mapper.Map<UserProfileDto>(userProfile);
         }
     }
 }

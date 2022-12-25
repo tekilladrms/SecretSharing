@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SecretSharing.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Application.Users
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationRole : IdentityRole
     {
-        public virtual Guid UserProfileId { get; set; }
     }
 }

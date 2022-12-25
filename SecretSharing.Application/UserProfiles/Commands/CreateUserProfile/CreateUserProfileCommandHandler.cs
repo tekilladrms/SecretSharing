@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Application.UserProfiles.Commands.CreateUserProfile
 {
-    internal class CreateUserProfileCommandHandler : IRequestHandler<CreateUserProfileCommand, UserProfileDto>
+    public class CreateUserProfileCommandHandler : IRequestHandler<CreateUserProfileCommand, UserProfileDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Application.Documents.Commands.DeleteDocument
 {
-    public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Unit>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+    //public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Unit>
+    //{
+    //    private readonly IUnitOfWork _unitOfWork;
+    //    private readonly IMapper _mapper;
 
-        public DeleteDocumentCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+    //    public DeleteDocumentCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    //    {
+    //        _unitOfWork = unitOfWork;
+    //        _mapper = mapper;
+    //    }
 
-        public async Task<Unit> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
-        {
-            var user = 
-        }
-    }
+    //    public async Task<Unit> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
+    //    {
+    //        var user = await _unitOfWork.UserProfiles.GetByIdAsync(request.); 
+    //    }
+    //}
 }

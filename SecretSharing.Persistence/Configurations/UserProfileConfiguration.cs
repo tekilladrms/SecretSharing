@@ -14,14 +14,14 @@ namespace SecretSharing.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<UserProfile> builder)
         {
-            builder.ToTable("UserProfiles");
+            builder.ToTable("UserProfile");
             builder.HasKey(userProfile => userProfile.Guid);
             builder.Property(userProfile => userProfile.Guid).ValueGeneratedNever();
 
             builder.OwnsOne(up => up.FirstName).Property(prop => prop.Value).HasColumnName("FirstName");
             builder.OwnsOne(up => up.LastName).Property(prop => prop.Value).HasColumnName("LastName");
 
-            builder.HasMany(up => up.Documents).WithMany(d => d.Users).UsingEntity(e => e.ToTable("UsersDocuments"));
+            builder.HasMany(up => up.Documents).WithMany(d => d.Users).UsingEntity(e => e.ToTable("UsersDocument"));
         }
     }
 }

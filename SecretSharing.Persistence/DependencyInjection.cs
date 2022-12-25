@@ -11,22 +11,22 @@ namespace SecretSharing.Persistence
     {
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration["DbConnection"];
+            var connectionString = configuration.GetConnectionString("DbConnection");
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //var connectionString = configuration.GetConnectionString();
+
+            //services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(connectionString));
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString(connectionString)));
+                options.UseSqlServer(connectionString));
 
-            services.AddDbContext<IdentityAppDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString(connectionString)));
-
-            //var builder = services.AddIdentityCore<ApplicationUser>();
-            //var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
-
-            //identityBuilder.AddEntityFrameworkStores<IdentityAppDbContext>();
-            //identityBuilder.AddSignInManager<SignInManager<ApplicationUser>>();
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager<SignInManager<ApplicationUser>>()
+                .AddUserManager<UserManager<ApplicationUser>>();
 
             return services;
         }
