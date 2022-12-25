@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,7 @@ using SecretSharing.Application;
 using SecretSharing.Application.Users;
 using SecretSharing.Domain.Repositories;
 using SecretSharing.Persistence;
+using System.Reflection;
 
 namespace SecretSharing.Api
 {
@@ -27,7 +29,7 @@ namespace SecretSharing.Api
         {
             services.AddApplication();
             services.AddPersistence(Configuration);
-
+            services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

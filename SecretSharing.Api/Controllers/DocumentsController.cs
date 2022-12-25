@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Api.Controllers
 {
-    [Route("api/documents")]
     [ApiController]
+    [Route("[controller]")]
     public class DocumentsController : ControllerBase
     {
         private readonly IMediator _mediator;

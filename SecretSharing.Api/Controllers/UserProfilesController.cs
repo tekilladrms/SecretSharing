@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Api.Controllers
 {
-    [Route("api/users")]
     [ApiController]
+    [Route("[controller]")]
     public class UserProfilesController : ControllerBase
     {
         private readonly IMediator _mediator;
