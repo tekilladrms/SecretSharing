@@ -22,6 +22,8 @@ namespace SecretSharing.Persistence.Configurations
             builder.OwnsOne(up => up.LastName).Property(prop => prop.Value).HasColumnName("LastName");
 
             builder.HasMany(up => up.Documents).WithMany(d => d.Users).UsingEntity(e => e.ToTable("UsersDocument"));
+
+            builder.HasMany<Document>().WithOne(d => d.Creator);
         }
     }
 }

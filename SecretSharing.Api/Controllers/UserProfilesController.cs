@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace SecretSharing.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserProfilesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -32,7 +32,7 @@ namespace SecretSharing.Api.Controllers
         //}
 
         // GET api/users/5
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> Get(Guid userId)
         {
             var user = await _mediator.Send(new GetUserProfileByIdQuery(userId));
@@ -54,7 +54,7 @@ namespace SecretSharing.Api.Controllers
         }
 
         // PUT api/users/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> Put([FromBody] UserProfileDto userProfileDto)
         {
             var user = await _mediator.Send(new UpdateUserProfileCommand(userProfileDto));
@@ -65,7 +65,7 @@ namespace SecretSharing.Api.Controllers
         }
 
         // DELETE api/users/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(Guid userProfileId)
         {
             return Ok(await _mediator.Send(new DeleteUserProfileCommand(userProfileId)));

@@ -1,5 +1,9 @@
-﻿using SecretSharing.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SecretSharing.Domain.Entities;
 using SecretSharing.Domain.Repositories;
+using SecretSharing.Persistence.Exceptions;
+using SecretSharing.Persistence.Specifications;
+using SecretSharing.Persistence.Specifications.UserProfileSpecifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,42 +13,58 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Persistence.Repositories
 {
-    public class UserProfileRepository : IRepository<UserProfile>
+    public class UserProfileRepository : IUserProfileRepository
     {
         private readonly ApplicationDbContext _context;
-        public UserProfileRepository(ApplicationDbContext context)
+        public UserProfileRepository(ApplicationDbContext context) => _context = context;
+
+
+        public async Task<IEnumerable<UserProfile>> GetAllBySpecificationAsync(
+            Specification<UserProfile> specification,
+            CancellationToken cancellationToken = default) =>
+            await ApplySpecification(specification)
+            .ToListAsync(cancellationToken);
+        
+
+        public async Task<UserProfile> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            _context = context;
+            var userProfile = await _context.Set<UserProfile>().FirstOrDefaultAsync(user => user.Guid == id);
+
+            if (userProfile is null) throw new NotFoundPersistencseException($"UserProfile with id = {id} was not found");
+
+            return userProfile;
         }
 
-        public Task<IEnumerable<UserProfile>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<UserProfile> GetByIdWithDocumentsAsync(
+            Guid id, CancellationToken cancellationToken = default) =>
+            await ApplySpecification(new UserByIdWithDocumentsSpecification(id))
+            .FirstOrDefaultAsync(cancellationToken);
+
+
+        public async Task<Guid> AddAsync(UserProfile entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await _context.Set<UserProfile>().AddAsync(entity);
+            return entity.Guid;
         }
 
-        public Task<UserProfile> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<UserProfile> Update(UserProfile entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
-        }
-        public Task<UserProfile> AddAsync(UserProfile entity, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
+            _context.Set<UserProfile>().Update(entity);
+            return await GetByIdAsync(entity.Guid);
         }
 
-        public UserProfile Update(UserProfile entity, CancellationToken cancellationToken = default)
+        public async Task Delete(Guid id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _context.Remove(await GetByIdAsync(id));
         }
 
-        public void Delete(Guid id, CancellationToken cancellationToken = default)
+        private IQueryable<UserProfile> ApplySpecification(Specification<UserProfile> specification)
         {
-            throw new NotImplementedException();
+            return SpecificationEvaluator.GetQuery(
+                _context.Set<UserProfile>(),
+                specification);
         }
 
-        public void Delete(UserProfile entity, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
+        
     }
 }

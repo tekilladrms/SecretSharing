@@ -2,7 +2,6 @@
 using SecretSharing.Domain.Primitives;
 using SecretSharing.Domain.ValueObjects;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SecretSharing.Domain.Entities
 {

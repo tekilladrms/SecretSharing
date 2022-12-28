@@ -10,14 +10,21 @@ namespace SecretSharing.Persistence
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        // for tests
+        public ApplicationDbContext() { }
+
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) : base(dbContextOptions) { 
             
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             modelBuilder.ApplyConfiguration(new UserProfileConfiguration());
             modelBuilder.ApplyConfiguration(new DocumentConfiguration());
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public static ApplicationDbContext Create(DbContextOptions<ApplicationDbContext> dbContextOptions)

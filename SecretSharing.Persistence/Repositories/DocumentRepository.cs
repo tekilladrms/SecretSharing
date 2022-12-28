@@ -1,29 +1,29 @@
-﻿using SecretSharing.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SecretSharing.Domain.Entities;
 using SecretSharing.Domain.Repositories;
+using SecretSharing.Persistence.Exceptions;
+using SecretSharing.Persistence.Specifications;
+using SecretSharing.Persistence.Specifications.DocumentSpecifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SecretSharing.Persistence.Exceptions;
+
 
 namespace SecretSharing.Persistence.Repositories
 {
-    public class DocumentRepository : IRepository<Document>
+    public class DocumentRepository : IDocumentRepository
     {
         private readonly ApplicationDbContext _context;
+        public DocumentRepository(ApplicationDbContext context) => _context = context;
 
-        public DocumentRepository(ApplicationDbContext context)
-        {
-            _context = context;
-            
-        }
-        public Task<IEnumerable<Document>> GetAllAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
+
+        public async Task<IEnumerable<Document>> GetAllBySpecificationAsync(
+            Specification<Document> specification,
+            CancellationToken cancellationToken = default) =>
+            await ApplySpecification(specification)
+            .ToListAsync(cancellationToken);
 
         public async Task<Document> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
@@ -34,32 +34,43 @@ namespace SecretSharing.Persistence.Repositories
             return document;
         }
 
-        public async Task<Document> AddAsync(Document entity, CancellationToken cancellationToken = default)
+        public async Task<Document> GetByIdWithUsersAsync(Guid id, 
+            CancellationToken cancellationToken = default) =>
+            await ApplySpecification(
+                new DocumentByIdWithUsersSpecification(id))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<Document> GetByIdWithCreatorAsync(
+            Guid id, CancellationToken cancellationToken = default) =>
+            await ApplySpecification(
+                new DocumentByIdWithCreatorSpecification(id))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<Guid> AddAsync(Document entity, CancellationToken cancellationToken = default)
         {
             await _context.Set<Document>().AddAsync(entity);
-            return await GetByIdAsync(entity.Guid);
+            return entity.Guid;
         }
 
-        public Document Update(Document entity, CancellationToken cancellationToken = default)
+        public async Task<Document> Update(Document entity, CancellationToken cancellationToken = default)
         {
             _context.Set<Document>().Update(entity);
 
-            return _context.Set<Document>().FirstOrDefault(doc => doc.Guid == entity.Guid);
+            return await GetByIdAsync(entity.Guid);
         }
 
-        public void Delete(Guid id, CancellationToken cancellationToken = default)
+        public async Task Delete(Guid id, CancellationToken cancellationToken = default)
         {
-            _context.Set<Document>().Remove(_context.Set<Document>().FirstOrDefault(doc => doc.Guid == id));
+            _context.Set<Document>().Remove(await GetByIdAsync(id));
         }
 
-        public void Delete(Document entity, CancellationToken cancellationToken = default)
+        private IQueryable<Document> ApplySpecification(Specification<Document> specification)
         {
-            _context.Set<Document>().Remove(entity);
+            return SpecificationEvaluator.GetQuery(
+                _context.Set<Document>(),
+                specification);
         }
 
-        Document IRepository<Document>.Update(Document entity, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

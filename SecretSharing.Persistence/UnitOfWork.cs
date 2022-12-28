@@ -11,12 +11,13 @@ namespace SecretSharing.Persistence
         private bool _disposed;
         private readonly ApplicationDbContext _context;
 
-        private IRepository<UserProfile> _userProfiles;
-        private IRepository<Document> _documents;
+        private IUserProfileRepository _userProfiles;
+        private IDocumentRepository _documents;
 
-        public IRepository<UserProfile> UserProfiles => _userProfiles;
 
-        public IRepository<Document> Documents => _documents;
+        IUserProfileRepository IUnitOfWork.UserProfiles => _userProfiles;
+
+        IDocumentRepository IUnitOfWork.Documents => _documents;
 
         public UnitOfWork(ApplicationDbContext context)
         {

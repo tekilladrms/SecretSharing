@@ -6,8 +6,9 @@ namespace SecretSharing.Domain.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        public IRepository<UserProfile> UserProfiles { get; }
-        public IRepository<Document> Documents { get; }
+        public IUserProfileRepository UserProfiles { get; }
+        public IDocumentRepository Documents { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

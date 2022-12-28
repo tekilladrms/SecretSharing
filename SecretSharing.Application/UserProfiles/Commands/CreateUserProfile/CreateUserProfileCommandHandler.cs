@@ -23,12 +23,14 @@ namespace SecretSharing.Application.UserProfiles.Commands.CreateUserProfile
             _mapper = mapper;
         }
 
-        public async Task<UserProfileDto> Handle(CreateUserProfileCommand request, CancellationToken cancellationToken)
+        public async Task<UserProfileDto> Handle(CreateUserProfileCommand request, CancellationToken cancellationToken = default)
         {
             var userProfile = UserProfile.Create();
-            var result = await _unitOfWork.UserProfiles.AddAsync(userProfile);
-
+            var id = await _unitOfWork.UserProfiles.AddAsync(userProfile);
+            
             await _unitOfWork.SaveChangesAsync();
+
+            var result = await _unitOfWork.UserProfiles.GetByIdAsync(id);
 
             return _mapper.Map<UserProfileDto>(result);
         }

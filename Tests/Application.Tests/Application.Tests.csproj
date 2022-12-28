@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="MockQueryable.Core" Version="7.0.0" />
+    <PackageReference Include="MockQueryable.EntityFrameworkCore" Version="5.0.2" />
+    <PackageReference Include="MockQueryable.FakeItEasy" Version="5.0.2" />
+    <PackageReference Include="Moq" Version="4.18.3" />
+    <PackageReference Include="WireMock.Net.Abstractions" Version="1.5.13" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,10 +26,15 @@
 
   <ItemGroup>
     <Folder Include="DocumentsTests\Queries\" />
-    <Folder Include="UserProfilesTests\Commands\" />
     <Folder Include="UserProfilesTests\Queries\" />
     <Folder Include="UsersTests\Commands\" />
     <Folder Include="UsersTests\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SecretSharing.Application\SecretSharing.Application.csproj" />
+    <ProjectReference Include="..\..\SecretSharing.Domain\SecretSharing.Domain.csproj" />
+    <ProjectReference Include="..\..\SecretSharing.Persistence\SecretSharing.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SecretSharing.Application.Abstractions;
 using SecretSharing.Application.Users;
 using SecretSharing.Domain.Repositories;
 
@@ -13,15 +14,10 @@ namespace SecretSharing.Persistence
         {
             var connectionString = configuration.GetConnectionString("DbConnection");
 
-            //var connectionString = configuration.GetConnectionString();
-
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(connectionString));
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseNpgsql(connectionString));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()

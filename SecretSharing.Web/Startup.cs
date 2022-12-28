@@ -28,7 +28,7 @@ namespace SecretSharing.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMediatR(new[] { Assembly.GetExecutingAssembly() });
-            services.AddApplication();
+            services.AddApplication(Configuration);
             services.AddPersistence(Configuration);
             //services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<IdentityDbContext>();

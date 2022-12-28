@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace SecretSharing.Domain.ValueObjects
 {
-    public class Name : ValueObject
+    public sealed class Name : ValueObject
     {
         public string Value { get; private set; } = string.Empty;
 
@@ -17,8 +17,8 @@ namespace SecretSharing.Domain.ValueObjects
 
         public static Name Create(string value)
         {
-            if (value is null) throw new ArgumentNullDomainException(nameof(value));
-            if (!IsValid(value)) throw new IncorrectParameterDomainException<string>(nameof(value));
+            //if (value is null) throw new ArgumentNullDomainException(nameof(value));
+            //if (!IsValid(value)) throw new IncorrectParameterDomainException<string>(nameof(value));
             return new Name(value);
         }
 

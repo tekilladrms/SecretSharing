@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Domain.ValueObjects
 {
-    public class DocumentName : ValueObject
+    public sealed class DocumentName : ValueObject
     {
         public string Value { get; private set; } = string.Empty;
 
