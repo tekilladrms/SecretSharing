@@ -8,15 +8,17 @@ namespace SecretSharing.Application
     {
         public MapProfile()
         {
-            CreateMap<UserProfile, UserProfileDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Guid))
-                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName.Value))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName.Value))
-                .ForMember(dest => dest.Documents, opt => opt.MapFrom(src => src.Documents));
-
             CreateMap<Document, DocumentDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Guid))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.Value));
+            //.ForMember(dest => dest.File.FileName, opt => opt.MapFrom(src => src.S3Info.FileName))
+            //.ForMember(dest => dest.File.ContentDisposition, opt => opt.MapFrom(src => src.S3Info.LocalPath));
+
+            CreateMap<ApplicationUser, UserInfoDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
+                
         }
     }
 }

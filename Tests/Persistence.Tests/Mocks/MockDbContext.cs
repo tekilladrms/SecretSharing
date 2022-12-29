@@ -125,9 +125,9 @@ namespace Persistence.Tests.Mocks
         public static Mock<ApplicationDbContext> GetMock()
         {
             var mock = new Mock<ApplicationDbContext>();
-            var profiles = new List<UserProfile>()
+            var profiles = new List<ApplicationUser>()
             {
-                UserProfile.Create(
+                new ApplicationUser.Create(
                     "John",
                     "Doe"
                     ),
@@ -173,7 +173,7 @@ namespace Persistence.Tests.Mocks
             // setups
 
 
-            mock.Setup(m => m.Set<UserProfile>()).ReturnsDbSet(profiles);
+            mock.Setup(m => m.Set<ApplicationUser>()).ReturnsDbSet(profiles);
             mock.Setup(m => m.Set<Document>()).ReturnsDbSet(documents);
 
             return mock;

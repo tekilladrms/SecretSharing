@@ -4,6 +4,7 @@ using SecretSharing.Application.Documents.Commands.CreateDocument;
 using SecretSharing.Application.Documents.Commands.DeleteDocument;
 using SecretSharing.Application.Documents.Commands.UpdateDocument;
 using SecretSharing.Application.Documents.Queries.GetDocumentById;
+using SecretSharing.Application.Documents.Queries.GetDocumentsByUserId;
 using SecretSharing.Application.DTO;
 using System;
 using System.Collections.Generic;
@@ -29,11 +30,11 @@ namespace SecretSharing.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync(Guid userId)
         {
-            //var results = await _mediator.Send(new GetDocumentsByUserIdQuery(userId));
+            var results = await _mediator.Send(new GetDocumentsByUserIdQuery(userId));
 
-            //if (results is null || !results.Any()) return BadRequest();
+            if (results is null || !results.Any()) return BadRequest();
 
-            return Ok();
+            return Ok(results);
         }
 
         // GET api/documents/5

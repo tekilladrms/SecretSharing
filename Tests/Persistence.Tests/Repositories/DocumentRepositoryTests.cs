@@ -15,7 +15,6 @@ namespace Persistence.Tests.Repositories
     public class DocumentRepositoryTests
     {
         private readonly Document document;
-        private readonly UserProfile profile;
         public DocumentRepositoryTests()
         {
             profile = UserProfile.Create();

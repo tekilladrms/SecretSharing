@@ -8,26 +8,26 @@ namespace SecretSharing.Domain.Entities
     {
         public DocumentName Name { get; private set; }
 
-        public UserProfile Creator { get; private set; }
+        public ApplicationUser Creator { get; private set; }
 
         public S3Info S3Info { get; private set; }
 
-        private List<UserProfile> _users = new();
-        public virtual IReadOnlyCollection<UserProfile> Users => _users;
+        private List<ApplicationUser> _users = new();
+        public virtual IReadOnlyCollection<ApplicationUser> Users => _users;
 
 
         // For EF
         private Document() : base() { }
 
-        private Document(DocumentName name, UserProfile creator, S3Info s3Info)
+        private Document(DocumentName name, ApplicationUser creator, S3Info s3Info)
         {
             Name = name;
             Creator = creator;
             S3Info = s3Info;
-            AddUserToUsers(Creator);
+            AddUserToUsers(creator);
         }
 
-        public static Document Create(string name, UserProfile creator, S3Info s3Info)
+        public static Document Create(string name, ApplicationUser creator, S3Info s3Info)
         {
             return new Document(DocumentName.Create(name), creator, s3Info);
         }
@@ -38,12 +38,12 @@ namespace SecretSharing.Domain.Entities
 
         }
 
-        public void AddUserToUsers(UserProfile user)
+        public void AddUserToUsers(ApplicationUser user)
         {
             _users.Add(user);
 
         }
-        public void DeleteUserFromUsers(UserProfile user)
+        public void DeleteUserFromUsers(ApplicationUser user)
         {
             _users.Remove(user);
         }

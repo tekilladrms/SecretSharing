@@ -27,11 +27,9 @@ namespace SecretSharing.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMediatR(new[] { Assembly.GetExecutingAssembly() });
             services.AddApplication(Configuration);
             services.AddPersistence(Configuration);
-            //services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<IdentityDbContext>();
+            
             services.AddRazorPages();
         }
 

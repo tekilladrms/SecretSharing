@@ -1,5 +1,4 @@
-﻿using SecretSharing.Domain.Entities;
-using SecretSharing.Domain.Repositories;
+﻿using SecretSharing.Domain.Repositories;
 using SecretSharing.Persistence.Repositories;
 using System;
 using System.Threading.Tasks;
@@ -11,18 +10,15 @@ namespace SecretSharing.Persistence
         private bool _disposed;
         private readonly ApplicationDbContext _context;
 
-        private IUserProfileRepository _userProfiles;
+        
         private IDocumentRepository _documents;
 
-
-        IUserProfileRepository IUnitOfWork.UserProfiles => _userProfiles;
 
         IDocumentRepository IUnitOfWork.Documents => _documents;
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
-            _userProfiles = new UserProfileRepository(_context);
             _documents = new DocumentRepository(_context);
         }
 
