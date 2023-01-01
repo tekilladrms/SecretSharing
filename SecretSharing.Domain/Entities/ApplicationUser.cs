@@ -10,7 +10,7 @@ namespace SecretSharing.Domain.Entities
         private List<Document> _documents = new();
         public IReadOnlyCollection<Document> Documents => _documents;
 
-        public void AddDocumentToDocumentList(Document document)
+        public void AddDocumentToDocuments(Document document)
         {
             _documents.Add(document);
             

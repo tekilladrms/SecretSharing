@@ -50,7 +50,7 @@ namespace Persistence.Tests.Repositories
             // act
 
             // assert
-            await Assert.ThrowsAsync<NotFoundPersistencseException>(async () => await repository.GetByIdAsync(id));
+            await Assert.ThrowsAsync<NotFoundPersistenceException>(async () => await repository.GetByIdAsync(id));
         }
 
         [Fact]

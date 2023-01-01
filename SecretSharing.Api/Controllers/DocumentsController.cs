@@ -7,7 +7,6 @@ using SecretSharing.Application.Documents.Queries.GetDocumentById;
 using SecretSharing.Application.Documents.Queries.GetDocumentsByUserId;
 using SecretSharing.Application.DTO;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 

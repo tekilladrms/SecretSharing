@@ -29,7 +29,7 @@ namespace SecretSharing.Persistence.Repositories
         {
             var document = await _context.Set<Document>().FirstOrDefaultAsync(doc => doc.Guid == id);
 
-            if (document is null) throw new NotFoundPersistencseException($"Document with id = {id} was not found");
+            if (document is null) throw new NotFoundPersistenceException($"Document with id = {id} was not found");
 
             return document;
         }
@@ -52,14 +52,14 @@ namespace SecretSharing.Persistence.Repositories
             return entity.Guid;
         }
 
-        public async Task<Document> Update(Document entity, CancellationToken cancellationToken = default)
+        public async Task<Document> UpdateAsync(Document entity, CancellationToken cancellationToken = default)
         {
             _context.Set<Document>().Update(entity);
 
             return await GetByIdAsync(entity.Guid);
         }
 
-        public async Task Delete(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             _context.Set<Document>().Remove(await GetByIdAsync(id));
         }

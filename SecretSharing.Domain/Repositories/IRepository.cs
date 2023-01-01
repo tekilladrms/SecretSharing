@@ -12,8 +12,8 @@ namespace SecretSharing.Domain.Repositories
         public Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         public Task<IEnumerable<TEntity>> GetAllBySpecificationAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default);
         public Task<Guid> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
-        public Task<TEntity> Update(TEntity entity, CancellationToken cancellationToken = default);
-        public Task Delete(Guid id, CancellationToken cancellationToken = default);
+        public Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+        public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 
         
     }

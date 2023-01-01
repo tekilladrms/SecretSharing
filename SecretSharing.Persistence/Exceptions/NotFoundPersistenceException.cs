@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Persistence.Exceptions
 {
-    public class ObjectCouldNotUploadedToBucketPersistenceException : PersistenceException
+    public class NotFoundPersistenceException : PersistenceException
     {
-        public ObjectCouldNotUploadedToBucketPersistenceException(string message) : base(message)
+        public NotFoundPersistenceException(string message) : base(message)
         {
         }
     }
