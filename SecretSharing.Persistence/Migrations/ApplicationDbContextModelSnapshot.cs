@@ -19,47 +19,6 @@ namespace SecretSharing.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("DocumentUserProfile", b =>
-                {
-                    b.Property<Guid>("DocumentsGuid")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UsersGuid")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("DocumentsGuid", "UsersGuid");
-
-                    b.HasIndex("UsersGuid");
-
-                    b.ToTable("UsersDocument");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -164,32 +123,33 @@ namespace SecretSharing.Persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SecretSharing.Domain.Entities.Document", b =>
+            modelBuilder.Entity("SecretSharing.Domain.Entities.ApplicationRole", b =>
                 {
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
-                    b.Property<Guid?>("CreatorGuid")
-                        .HasColumnType("uuid");
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
 
-                    b.HasKey("Guid");
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
-                    b.HasIndex("CreatorGuid");
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
-                    b.ToTable("Document");
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("SecretSharing.Domain.Entities.UserProfile", b =>
-                {
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Guid");
-
-                    b.ToTable("UserProfile");
-                });
-
-            modelBuilder.Entity("SecretSharing.Infrastructure.Identity.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("SecretSharing.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -241,9 +201,6 @@ namespace SecretSharing.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<Guid?>("UserProfileGuid")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -253,29 +210,12 @@ namespace SecretSharing.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("UserProfileGuid");
-
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("DocumentUserProfile", b =>
-                {
-                    b.HasOne("SecretSharing.Domain.Entities.Document", null)
-                        .WithMany()
-                        .HasForeignKey("DocumentsGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SecretSharing.Domain.Entities.UserProfile", null)
-                        .WithMany()
-                        .HasForeignKey("UsersGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("SecretSharing.Domain.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -284,7 +224,7 @@ namespace SecretSharing.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SecretSharing.Infrastructure.Identity.Entities.ApplicationUser", null)
+                    b.HasOne("SecretSharing.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -293,7 +233,7 @@ namespace SecretSharing.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SecretSharing.Infrastructure.Identity.Entities.ApplicationUser", null)
+                    b.HasOne("SecretSharing.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -302,13 +242,13 @@ namespace SecretSharing.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("SecretSharing.Domain.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SecretSharing.Infrastructure.Identity.Entities.ApplicationUser", null)
+                    b.HasOne("SecretSharing.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -317,120 +257,11 @@ namespace SecretSharing.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SecretSharing.Infrastructure.Identity.Entities.ApplicationUser", null)
+                    b.HasOne("SecretSharing.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SecretSharing.Domain.Entities.Document", b =>
-                {
-                    b.HasOne("SecretSharing.Domain.Entities.UserProfile", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorGuid");
-
-                    b.OwnsOne("SecretSharing.Domain.ValueObjects.DocumentName", "Name", b1 =>
-                        {
-                            b1.Property<Guid>("DocumentGuid")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .HasColumnType("text")
-                                .HasColumnName("Name");
-
-                            b1.HasKey("DocumentGuid");
-
-                            b1.ToTable("Document");
-
-                            b1.WithOwner()
-                                .HasForeignKey("DocumentGuid");
-                        });
-
-                    b.OwnsOne("SecretSharing.Domain.ValueObjects.S3Info", "S3Info", b1 =>
-                        {
-                            b1.Property<Guid>("DocumentGuid")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("BucketName")
-                                .HasColumnType("text")
-                                .HasColumnName("BucketName");
-
-                            b1.Property<string>("FileName")
-                                .HasColumnType("text")
-                                .HasColumnName("FileName");
-
-                            b1.Property<string>("FolderName")
-                                .HasColumnType("text")
-                                .HasColumnName("FolderName");
-
-                            b1.Property<string>("LocalPath")
-                                .HasColumnType("text")
-                                .HasColumnName("LocalPath");
-
-                            b1.HasKey("DocumentGuid");
-
-                            b1.ToTable("Document");
-
-                            b1.WithOwner()
-                                .HasForeignKey("DocumentGuid");
-                        });
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Name");
-
-                    b.Navigation("S3Info");
-                });
-
-            modelBuilder.Entity("SecretSharing.Domain.Entities.UserProfile", b =>
-                {
-                    b.OwnsOne("SecretSharing.Domain.ValueObjects.Name", "FirstName", b1 =>
-                        {
-                            b1.Property<Guid>("UserProfileGuid")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .HasColumnType("text")
-                                .HasColumnName("FirstName");
-
-                            b1.HasKey("UserProfileGuid");
-
-                            b1.ToTable("UserProfile");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserProfileGuid");
-                        });
-
-                    b.OwnsOne("SecretSharing.Domain.ValueObjects.Name", "LastName", b1 =>
-                        {
-                            b1.Property<Guid>("UserProfileGuid")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .HasColumnType("text")
-                                .HasColumnName("LastName");
-
-                            b1.HasKey("UserProfileGuid");
-
-                            b1.ToTable("UserProfile");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserProfileGuid");
-                        });
-
-                    b.Navigation("FirstName");
-
-                    b.Navigation("LastName");
-                });
-
-            modelBuilder.Entity("SecretSharing.Infrastructure.Identity.Entities.ApplicationUser", b =>
-                {
-                    b.HasOne("SecretSharing.Domain.Entities.UserProfile", "UserProfile")
-                        .WithMany()
-                        .HasForeignKey("UserProfileGuid");
-
-                    b.Navigation("UserProfile");
                 });
 #pragma warning restore 612, 618
         }

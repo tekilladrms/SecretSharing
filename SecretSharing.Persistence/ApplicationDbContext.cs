@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SecretSharing.Domain.Entities;
-using SecretSharing.Persistence.Configurations;
 
 namespace SecretSharing.Persistence
 {
@@ -14,14 +13,8 @@ namespace SecretSharing.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new DocumentConfiguration());
-
             base.OnModelCreating(modelBuilder);
         }
 
-        public static ApplicationDbContext Create(DbContextOptions<ApplicationDbContext> dbContextOptions)
-        {
-            return new ApplicationDbContext(dbContextOptions);
-        }
     }
 }

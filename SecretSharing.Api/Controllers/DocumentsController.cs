@@ -1,12 +1,12 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSharing.Application.Documents.Commands.CreateDocument;
+using SecretSharing.Application.Documents.Commands.CreateDocumentFromText;
 using SecretSharing.Application.Documents.Commands.DeleteDocument;
-using SecretSharing.Application.Documents.Commands.UpdateDocument;
-using SecretSharing.Application.Documents.Queries.GetDocumentById;
-using SecretSharing.Application.Documents.Queries.GetDocumentsByUserId;
-using SecretSharing.Application.DTO;
-using System;
+using SecretSharing.Application.Documents.Queries.GetAllDocumentsByUserId;
+using SecretSharing.Application.Documents.Queries.GetDocumentByKey;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,8 +14,9 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Api.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/user/[controller]")]
     public class DocumentsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -25,55 +26,51 @@ namespace SecretSharing.Api.Controllers
             _mediator = mediator;
         }
 
-        // GET: api/documents
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync(Guid userId)
+        public async Task<ActionResult> GetAllAsync(string userId)
         {
-            var results = await _mediator.Send(new GetDocumentsByUserIdQuery(userId));
+            var results = await _mediator.Send(new GetAllDocumentsByUserIdQuery(userId));
 
             if (results is null || !results.Any()) return BadRequest();
 
             return Ok(results);
         }
 
-        // GET api/documents/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid documentId)
+        [HttpGet("download")]
+        public async Task<FileStreamResult> DownloadDocumentByKey(string userId, string fileName, string path)
         {
-            var document = await _mediator.Send(new GetDocumentByIdQuery(documentId));
+            var (result, contentType) = await _mediator.Send(new DownloadDocumentByKeyQuery(userId, fileName, path));
+
+            return new FileStreamResult(result, contentType)
+            {
+                FileDownloadName = fileName
+            };
+        }
+
+        [HttpPost("file")]
+        public async Task<IActionResult> PostFromFile(IFormFile file, string userId)
+        {
+            var document = await _mediator.Send(new CreateDocumentFromFileCommand(file, userId));
 
             if(document is null) return BadRequest();
 
             return Ok(document);
         }
 
-        // POST api/documents
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] DocumentDto documentDto, Guid UserPrifileId)
+        [HttpPost("text")]
+        public async Task<IActionResult> PostFromText(string text, string title, string userId)
         {
-            var document = await _mediator.Send(new CreateDocumentCommand(documentDto, UserPrifileId));
+            var document = await _mediator.Send(new CreateDocumentFromTextCommand(text, title, userId));
 
             if(document is null) return BadRequest();
-
-            return Created($"api/documents/{document.Name}", document);
-        }
-
-        // PUT api/documents/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromBody] DocumentDto documentDto)
-        {
-            var document = await _mediator.Send(new UpdateDocumentCommand(documentDto));
-
-            if(document is null) return BadRequest(); 
-
+            
             return Ok(document);
         }
 
-        // DELETE api/documents/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid documentId, Guid userId)
+        [HttpDelete]
+        public async Task<ActionResult> Delete(string userId, string fileName)
         {
-            return Ok(await _mediator.Send(new DeleteDocumentCommand(documentId)));
+            return Ok(await _mediator.Send(new DeleteDocumentCommand(userId, fileName)));
         }
     }
 }

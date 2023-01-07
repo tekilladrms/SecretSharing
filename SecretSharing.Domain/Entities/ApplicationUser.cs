@@ -7,13 +7,9 @@ namespace SecretSharing.Domain.Entities
 {
     public class ApplicationUser : IdentityUser
     {
-        private List<Document> _documents = new();
-        public IReadOnlyCollection<Document> Documents => _documents;
-
-        public void AddDocumentToDocuments(Document document)
+        public string GetNameFromEmail(string email)
         {
-            _documents.Add(document);
-            
+            return email.Substring(0, email.IndexOf('@'));
         }
     }
 }

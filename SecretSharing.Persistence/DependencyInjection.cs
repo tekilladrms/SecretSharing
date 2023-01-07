@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Amazon.Runtime;
+using Amazon.S3;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SecretSharing.Application.Abstractions;
 using SecretSharing.Domain.Entities;
 using SecretSharing.Domain.Repositories;
+using SecretSharing.Persistence.Repositories;
 
 namespace SecretSharing.Persistence
 {
@@ -14,8 +16,16 @@ namespace SecretSharing.Persistence
         {
             var connectionString = configuration.GetConnectionString("DbConnection");
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
+            var awsOptions = configuration.GetAWSOptions();
+            awsOptions.Credentials = new BasicAWSCredentials(
+                configuration["AWS:AccessKey"], configuration["AWS:SecretKey"]);
+            //awsOptions.Region = Amazon.RegionEndpoint.EUCentral1;
+            services.AddDefaultAWSOptions(awsOptions);
+
+            services.AddAWSService<IAmazonS3>(lifetime: ServiceLifetime.Singleton);
+
+            services.AddScoped<IDocumentStorage, S3DocumentStorage>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(connectionString));
 

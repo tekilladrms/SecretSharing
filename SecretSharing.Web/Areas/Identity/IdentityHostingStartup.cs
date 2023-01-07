@@ -1,12 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using SecretSharing.Application.Users;
-using SecretSharing.Persistence;
+﻿using Microsoft.AspNetCore.Hosting;
 
 [assembly: HostingStartup(typeof(SecretSharing.Web.Areas.Identity.IdentityHostingStartup))]
 namespace SecretSharing.Web.Areas.Identity

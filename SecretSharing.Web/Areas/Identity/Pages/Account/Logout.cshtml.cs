@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using SecretSharing.Infrastructure.Identity.Entities;
+using SecretSharing.Domain.Entities;
 using System.Threading.Tasks;
 
 namespace SecretSharing.Web.Areas.Identity.Pages.Account

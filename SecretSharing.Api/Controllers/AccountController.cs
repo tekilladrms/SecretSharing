@@ -1,55 +1,55 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SecretSharing.Application.Users.Commands.Login;
-using SecretSharing.Application.Users.Commands.RegisterUser;
-using SecretSharing.Domain.Entities;
-using System;
+using SecretSharing.Application.Account.Commands.RegisterUser;
+using SecretSharing.Application.Account.Queries.Login;
+using SecretSharing.Application.Account.Queries.Logout;
+using SecretSharing.Application.DTO;
+using System.ComponentModel.DataAnnotations;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SecretSharing.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]/[action]")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
+    [Route("api/users/")]
     public class AccountController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public AccountController(IMediator mediator, UserManager<ApplicationUser> userManager)
+        public AccountController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public Task<IActionResult> Register()
-        {
-            throw new NotImplementedException();
-        }
 
-        // POST api/auth
         [HttpPost]
-        public async Task<IActionResult> Register(string email, string password)
+        [Route("register")]
+        public async Task<ActionResult<UserDTO>> RegisterAsync([Required] string email, [Required] string password, CancellationToken cancellationToken)
         {
-
-            return Ok(await _mediator.Send(new RegisterUserCommand(email, password)));
+            var result = await _mediator.Send(
+                new RegisterUserCommand(email, password), 
+                cancellationToken);
+            return Ok(result);
         }
 
-        [HttpGet]
-        public Task Login()
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> LoginAsync([Required] string email, [Required] string password, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var resultToken = await _mediator.Send(
+                new LoginQuery(email, password), 
+                cancellationToken);
+            return Ok(resultToken);
         }
 
-        // POST api/auth/email
-        [HttpPost("{login}")]
-        public async Task<IActionResult> Login(string email, string password)
+
+        [HttpPost]
+        [Route("logout")]
+        public async Task<ActionResult> Logout(LogoutCommand request, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(new LoginCommand(email, password)));
+            return Ok(await _mediator.Send(request, cancellationToken));
         }
-
-        //public IActionResult Logout()
-        //{
-
-        //}
     }
 }
