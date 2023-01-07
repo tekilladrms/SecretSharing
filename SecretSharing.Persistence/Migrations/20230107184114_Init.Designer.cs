@@ -10,7 +10,7 @@ using SecretSharing.Persistence;
 namespace SecretSharing.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230103225506_Init")]
+    [Migration("20230107184114_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

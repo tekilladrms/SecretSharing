@@ -29,9 +29,9 @@ namespace SecretSharing.Application.Account.Queries.Login
 
         public async Task<UserDTO> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
 
-            if(user is null || !await _userManager.CheckPasswordAsync(user, request.password))
+            if(user is null || !await _userManager.CheckPasswordAsync(user, request.Password))
             {
                 throw new RestException("invalid emain/password");
             }

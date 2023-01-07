@@ -1,5 +1,4 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +11,7 @@ using SecretSharing.Application;
 using SecretSharing.Application.Behaviors;
 using SecretSharing.Infrastructure;
 using SecretSharing.Persistence;
+using System.Reflection;
 using System.Text;
 
 namespace SecretSharing.Api
@@ -31,13 +31,15 @@ namespace SecretSharing.Api
             services.AddControllers();
             services.AddMvc();
             
-            //services.AddValidatorsFromAssembly(AssemblyReference.Assembly, includeInternalTypes: true);
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            
 
             services.AddApplication(Configuration);
             services.AddPersistence(Configuration);
             services.AddInfrastructure();
+
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly, includeInternalTypes: true);
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>

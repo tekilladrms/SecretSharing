@@ -11,12 +11,12 @@ namespace SecretSharing.Application.Account.Queries.Login
     {
         public LoginQueryValidator()
         {
-            RuleFor(loginQuery => loginQuery.email)
+            RuleFor(loginQuery => loginQuery.Email)
                 .NotNull()
                 .NotEmpty()
                 .EmailAddress();
 
-            RuleFor(loginQuery => loginQuery.password)
+            RuleFor(loginQuery => loginQuery.Password)
                 .NotNull()
                 .NotEmpty()
                 .Length(8, 20);

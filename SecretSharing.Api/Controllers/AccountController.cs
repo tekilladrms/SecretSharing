@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace SecretSharing.Api.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
+    [ApiController]
     [Route("api/users/")]
     public class AccountController : ControllerBase
     {
@@ -36,10 +36,10 @@ namespace SecretSharing.Api.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> LoginAsync([Required] string email, [Required] string password, CancellationToken cancellationToken)
+        public async Task<IActionResult> LoginAsync(LoginQuery request, CancellationToken cancellationToken)
         {
             var resultToken = await _mediator.Send(
-                new LoginQuery(email, password), 
+                request, 
                 cancellationToken);
             return Ok(resultToken);
         }

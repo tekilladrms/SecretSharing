@@ -1,6 +1,9 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SecretSharing.Application.Behaviors;
 using System.Reflection;
 
 namespace SecretSharing.Application
