@@ -5,6 +5,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using SecretSharing.Domain.Exceptions;
 using SecretSharing.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -102,12 +103,13 @@ namespace SecretSharing.Persistence.Repositories
         {
             var response = await _amazonS3.GetObjectAsync(_bucketName, $"{userId}/{fileName}", cancellationToken);
 
+            if (response is null)
+                throw new DocumentWasNotDownloadedDomainException($"{userId}/{fileName}");
+
             using Stream responseStream = response.ResponseStream;
             var stream = new MemoryStream();
             await responseStream.CopyToAsync(stream);
             stream.Position = 0;
-
-            //await response.WriteResponseStreamToFileAsync(path, false, cancellationToken);
 
             return (stream, response.Headers.ContentType);
         }
@@ -116,16 +118,12 @@ namespace SecretSharing.Persistence.Repositories
         {
             var request = new DeleteObjectRequest()
             {
+                
                 BucketName = _bucketName,
                 Key = $"{userId}/{fileName}"
             };
 
-            await _amazonS3.DeleteObjectAsync(request, cancellationToken);
-        }
-
-        public Task DeleteAllDocumentsAsync(string userId, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
+            var response = await _amazonS3.DeleteObjectAsync(request, cancellationToken);
         }
 
 

@@ -19,7 +19,7 @@ namespace SecretSharing.Persistence
             var awsOptions = configuration.GetAWSOptions();
             awsOptions.Credentials = new BasicAWSCredentials(
                 configuration["AWS:AccessKey"], configuration["AWS:SecretKey"]);
-            //awsOptions.Region = Amazon.RegionEndpoint.EUCentral1;
+
             services.AddDefaultAWSOptions(awsOptions);
 
             services.AddAWSService<IAmazonS3>(lifetime: ServiceLifetime.Singleton);

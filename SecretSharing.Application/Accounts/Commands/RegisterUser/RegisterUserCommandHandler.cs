@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SecretSharing.Application.Account.Commands.RegisterUser
+namespace SecretSharing.Application.Accounts.Commands.RegisterUser
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, UserDTO>
     {

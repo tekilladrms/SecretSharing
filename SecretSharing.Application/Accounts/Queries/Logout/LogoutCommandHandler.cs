@@ -4,7 +4,7 @@ using SecretSharing.Domain.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SecretSharing.Application.Account.Queries.Logout
+namespace SecretSharing.Application.Accounts.Queries.Logout
 {
     public class LogoutCommandHandler : IRequestHandler<LogoutCommand, Unit>
     {

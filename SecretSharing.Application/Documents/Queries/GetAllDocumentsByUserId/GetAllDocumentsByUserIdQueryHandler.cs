@@ -22,7 +22,7 @@ namespace SecretSharing.Application.Documents.Queries.GetAllDocumentsByUserId
 
         public async Task<IReadOnlyCollection<string>> Handle(GetAllDocumentsByUserIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+            var user = await _userManager.FindByIdAsync(request.UserId);
 
             if (user is null) throw new NotFoundDomainException($"User with id = {request.UserId} was not found");
 

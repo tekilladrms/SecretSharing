@@ -1,20 +1,18 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSharing.Application.Documents.Commands.CreateDocument;
 using SecretSharing.Application.Documents.Commands.CreateDocumentFromText;
 using SecretSharing.Application.Documents.Commands.DeleteDocument;
 using SecretSharing.Application.Documents.Queries.GetAllDocumentsByUserId;
 using SecretSharing.Application.Documents.Queries.GetDocumentByKey;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSharing.Api.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
     [Route("api/user/[controller]")]
     public class DocumentsController : ControllerBase
@@ -26,51 +24,49 @@ namespace SecretSharing.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetAllAsync(string userId)
+        [HttpPost]
+        public async Task<ActionResult> GetAllAsync(GetAllDocumentsByUserIdQuery request)
         {
-            var results = await _mediator.Send(new GetAllDocumentsByUserIdQuery(userId));
-
-            if (results is null || !results.Any()) return BadRequest();
+            var results = await _mediator.Send(request);
 
             return Ok(results);
         }
 
-        [HttpGet("download")]
-        public async Task<FileStreamResult> DownloadDocumentByKey(string userId, string fileName, string path)
+        [HttpPost("download")]
+        public async Task<FileStreamResult> DownloadDocumentByKey(DownloadDocumentByKeyQuery request)
         {
-            var (result, contentType) = await _mediator.Send(new DownloadDocumentByKeyQuery(userId, fileName, path));
+            var (result, contentType) = await _mediator.Send(request);
 
             return new FileStreamResult(result, contentType)
             {
-                FileDownloadName = fileName
+                FileDownloadName = request.FileName,
             };
         }
 
         [HttpPost("file")]
-        public async Task<IActionResult> PostFromFile(IFormFile file, string userId)
+        public async Task<IActionResult> PostFromFile([FromQuery] CreateDocumentFromFileCommand request)
         {
-            var document = await _mediator.Send(new CreateDocumentFromFileCommand(file, userId));
+            var document = await _mediator.Send(request);
 
-            if(document is null) return BadRequest();
+            if (document is null) return BadRequest();
 
             return Ok(document);
         }
 
         [HttpPost("text")]
-        public async Task<IActionResult> PostFromText(string text, string title, string userId)
+        public async Task<IActionResult> PostFromText(CreateDocumentFromTextCommand request)
         {
-            var document = await _mediator.Send(new CreateDocumentFromTextCommand(text, title, userId));
+            var document = await _mediator.Send(request);
 
-            if(document is null) return BadRequest();
-            
+            if (document is null) return BadRequest();
+
             return Ok(document);
         }
 
-        [HttpDelete]
-        public async Task<ActionResult> Delete(string userId, string fileName)
+        [HttpDelete("id")]
+        public async Task<ActionResult> Delete([FromQuery] DeleteDocumentCommand request)
         {
-            return Ok(await _mediator.Send(new DeleteDocumentCommand(userId, fileName)));
+            return Ok(await _mediator.Send(request));
         }
     }
 }

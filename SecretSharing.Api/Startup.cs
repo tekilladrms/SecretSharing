@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SecretSharing.Api.Middleware;
 using SecretSharing.Application;
 using SecretSharing.Application.Behaviors;
 using SecretSharing.Infrastructure;
@@ -36,10 +37,9 @@ namespace SecretSharing.Api
             services.AddPersistence(Configuration);
             services.AddInfrastructure();
 
-            services.AddValidatorsFromAssembly(typeof(Startup).Assembly, includeInternalTypes: true);
+            services.AddValidatorsFromAssembly(SecretSharing.Application.AssemblyReference.Assembly, includeInternalTypes: true);
 
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPiplineBehavior<,>));
 
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
@@ -51,9 +51,9 @@ namespace SecretSharing.Api
                         IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.ASCII.GetBytes(Configuration["JWT:SecretKey"]))
                     };
-                }
-                );
+                });
 
+            services.AddTransient<ExceptionHandlingMiddleware>();
 
             services.AddSwaggerGen(c =>
             {
@@ -96,14 +96,13 @@ namespace SecretSharing.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SecretSharing.Api v1"));
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseStatusCodePages();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
-
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,28 +1,23 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Rest;
 using SecretSharing.Application.Abstractions;
 using SecretSharing.Application.DTO;
 using SecretSharing.Domain.Entities;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SecretSharing.Application.Account.Queries.Login
+namespace SecretSharing.Application.Accounts.Queries.Login
 {
     public class LoginQueryHandler : IRequestHandler<LoginQuery, UserDTO>
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtProvider _jwtProvider;
 
         public LoginQueryHandler(
-            SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IJwtProvider jwtProvider)
         {
-            _signInManager = signInManager;
             _userManager = userManager;
             _jwtProvider = jwtProvider;
         }
@@ -33,7 +28,7 @@ namespace SecretSharing.Application.Account.Queries.Login
 
             if(user is null || !await _userManager.CheckPasswordAsync(user, request.Password))
             {
-                throw new RestException("invalid emain/password");
+                throw new RestException("email/password is wrong");
             }
 
             var userDTO = new UserDTO()

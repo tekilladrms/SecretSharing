@@ -1,9 +1,6 @@
-﻿using FluentValidation;
-using FluentValidation.AspNetCore;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SecretSharing.Application.Behaviors;
 using System.Reflection;
 
 namespace SecretSharing.Application
@@ -13,8 +10,6 @@ namespace SecretSharing.Application
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMediatR(AssemblyReference.Assembly);
-
-            services.AddAutoMapper(new[] { Assembly.GetExecutingAssembly() });
 
             return services;
         }

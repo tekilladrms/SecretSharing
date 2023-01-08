@@ -18,7 +18,5 @@ namespace SecretSharing.Domain.Repositories
 
         public Task DeleteDocumentAsync(string userId, string fileName, CancellationToken cancellationToken);
 
-        public Task DeleteAllDocumentsAsync(string userId, CancellationToken cancellationToken);
-
     }
 }

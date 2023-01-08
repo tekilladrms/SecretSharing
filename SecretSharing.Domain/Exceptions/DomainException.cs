@@ -7,6 +7,7 @@ namespace SecretSharing.Domain.Exceptions
     {
         protected DomainException(string message) : base(message)
         {
+            
         }
     }
 }

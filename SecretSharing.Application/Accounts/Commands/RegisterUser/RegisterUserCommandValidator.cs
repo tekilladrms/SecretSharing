@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SecretSharing.Application.Account.Commands.RegisterUser
+namespace SecretSharing.Application.Accounts.Commands.RegisterUser
 {
     public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
     {

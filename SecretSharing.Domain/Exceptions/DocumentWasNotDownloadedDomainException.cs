@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SecretSharing.Domain.Exceptions
 {
-    public class DocumentWasNotUploadedDomainException : DomainException
+    public class DocumentWasNotDownloadedDomainException : DomainException
     {
-        public DocumentWasNotUploadedDomainException(string message) : base(message)
+        public DocumentWasNotDownloadedDomainException(string message) : base(message)
         {
 
         }

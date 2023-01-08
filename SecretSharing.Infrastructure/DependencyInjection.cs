@@ -11,8 +11,6 @@ namespace SecretSharing.Infrastructure
         {
             services.AddSingleton<IJwtProvider, JwtProvider>();
 
-            
-
             return services;
         }
     }
